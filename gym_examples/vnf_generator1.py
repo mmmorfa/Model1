@@ -13,16 +13,16 @@ pd.set_option("display.max_rows", None, "display.max_columns", None)
 
 # ****************************** GLOBALS ******************************
 # File directory
-DIRECTORY = 'slice_request_db'
+DIRECTORY = 'slice_request_db1'
 # Number of VNF types dictionary
-# i.e. {key: value}, value = [MEC_ID, BW] (modified to 5 types of [MEC,BW] only)
-VNF_TYPES = {0: [1, 8], 1: [3,20], 2: [2, 14], 3: [2, 5], 4: [1, 30], 5: [3, 2]}
+# i.e. {key: value}, value = [BW] (modified to 5 types of [BW] only)
+VNF_TYPES = {0: [8], 1: [20], 2: [14], 3: [5], 4: [30], 5: [2]}
 # Arrival rates from VNF types dictionary
 ARRIVAL_RATE = {0: 3, 1: 2, 2: 1, 3: 4, 4: 2, 5: 3}
 # VNF life cycle from VNF types dictionary
 LIFE_CYCLE_RATE = {0: 10, 1: 20, 2: 80, 3: 50, 4: 60, 5: 50}
 # Num of vnf requests
-NUM_VNF_REQUESTS = 100000
+NUM_VNF_REQUESTS = 10000
 
 
 # SEED
@@ -50,7 +50,7 @@ def generate_requests_per_type(key, num):
         vnf_request_life_time = np.random.poisson(LIFE_CYCLE_RATE[key]) 
         vnf_kill_at_time = vnf_request_at_time + vnf_request_life_time
 
-        final_vnf = [vnf_request_at_time, VNF_TYPES[key][0], VNF_TYPES[key][1], vnf_kill_at_time]
+        final_vnf = [vnf_request_at_time, VNF_TYPES[key][0], vnf_kill_at_time]
         #final_vnf = [vnf_request_at_time, VNF_TYPES[key][0], vnf_kill_at_time]
 
         # Round up decimals
@@ -103,7 +103,7 @@ vnfList.sort(key=lambda x: x[0])
 vnfList = vnfList[:NUM_VNF_REQUESTS]
 
 # Dataframe
-columns = ['ARRIVAL_REQUEST_@TIME', 'MEC_ID', 'SLICE_BW_REQUEST', 'SLICE_KILL_@TIME']
+columns = ['ARRIVAL_REQUEST_@TIME', 'SLICE_BW_REQUEST', 'SLICE_KILL_@TIME']
 df = pd.DataFrame(data=vnfList, columns=columns, dtype=float)
 
 # Export df to  csv file
