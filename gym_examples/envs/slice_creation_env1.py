@@ -14,12 +14,12 @@ class SliceCreationEnv1(gym.Env):
         # Define environment parameters
         
         #Available resources (Order: MEC BW, )
-        self.resources = [1000]
+        self.resources = [500]
         
         #Defined parameters per Slice. (Each component is a list of the correspondent slice parameters)
         self.slices_param = [10, 20, 50]
 
-        self.slice_requests = pd.read_csv('D:/Work/UPC/ORAN/DQN models/Model 1/gym-examples/gym_examples/slice_request_db1')  # Load VNF requests from the generated CSV
+        self.slice_requests = pd.read_csv('/home/mario/Documents/DQN_Models/Model 1/gym-examples/gym_examples/slice_request_db1')  # Load VNF requests from the generated CSV
         
         self.observation_space = gym.spaces.Box(low=0, high=10000, shape=(2,), dtype=np.float32) #ovservation space composed by Requested resources (MEC BW) and available MEC resources.
         
@@ -43,13 +43,14 @@ class SliceCreationEnv1(gym.Env):
         self.current_time_step = 1
         self.reward = 0
         self.processed_requests = []
-        next_request = self.read_request()
-        self.update_slice_requests(next_request)
-        self.observation = np.array([next_request[1]] + deepcopy(self.resources), dtype=np.float32)
+        self.reset_resources()
+        self.next_request = self.read_request()
+        self.update_slice_requests(self.next_request)
+        self.observation = np.array([self.next_request[1]] + deepcopy(self.resources), dtype=np.float32)
         #self.observation = np.array(self.observation, np.float32)
         self.info = {}
         self.first = True
-        print("\nReset: ", self.observation)
+        #print("\nReset: ", self.observation)
         return self.observation, self.info
 
 
@@ -57,60 +58,60 @@ class SliceCreationEnv1(gym.Env):
     def step(self, action):
         
         if self.first:
-            next_request = self.processed_requests[0]
+            self.next_request = self.processed_requests[0]
             self.first = False
         else: 
-            next_request = self.read_request()
-            self.update_slice_requests(next_request)
+            #next_request = self.read_request()
+            self.update_slice_requests(self.next_request)
             
         terminated = False
         
-        slice_id = self.create_slice(next_request)
+        slice_id = self.create_slice(self.next_request)
         
         reward_value = 10
         
         # Apply the selected action (0: Do Nothing, 1: Allocate Slice 1, 2: Allocate Slice 2, 3: Allocate Slice 3)
         
         if action == 1 and slice_id == 1:
-            if self.check_resources(next_request[1]):
-                self.allocate_slice(next_request[1])
+            if self.check_resources(self.next_request[1]):
+                self.allocate_slice(self.next_request[1])
                 self.processed_requests[len(self.processed_requests) - 1].append(slice_id)
                 self.reward += reward_value   
-                next_request = self.read_request()
+                self.next_request = self.read_request()
             else: terminated = True
         
         if action == 1 and slice_id != 1:
             terminated = True
             
         if action == 2 and slice_id == 2:
-            if self.check_resources(next_request[1]):
-                self.allocate_slice(next_request[1])
+            if self.check_resources(self.next_request[1]):
+                self.allocate_slice(self.next_request[1])
                 self.processed_requests[len(self.processed_requests) - 1].append(slice_id)
                 self.reward += reward_value 
-                next_request = self.read_request()
+                self.next_request = self.read_request()
             else: terminated = True
         
         if action == 2 and slice_id != 2:
             terminated = True
             
         if action == 3 and slice_id == 3:
-            if self.check_resources(next_request[1]):
-                self.allocate_slice(next_request[1])
+            if self.check_resources(self.next_request[1]):
+                self.allocate_slice(self.next_request[1])
                 self.processed_requests[len(self.processed_requests) - 1].append(slice_id)
                 self.reward += reward_value     
-                next_request = self.read_request()
+                self.next_request = self.read_request()
             else: terminated = True
         
         if action == 3 and slice_id != 3:
             terminated = True
             
         if action == 0:
-            if not self.check_resources(next_request[1]):
+            if not self.check_resources(self.next_request[1]):
                 self.reward += reward_value
-                next_request = self.read_request()
+                self.next_request = self.read_request()
             else: terminated = True        
     
-        observation = np.array([next_request[1]] + self.resources, dtype=np.float32)
+        self.observation = np.array([self.next_request[1]] + self.resources, dtype=np.float32)
         
         reward = self.reward
         
@@ -119,8 +120,8 @@ class SliceCreationEnv1(gym.Env):
         info = {}  # Additional information (if needed)
         
         #self.current_time_step += 1  # Increment the time step
-        print("Action: ", action, "\nObservation: ", observation)
-        return observation, reward, terminated, False, info
+        #print("Action: ", action, "\nObservation: ", self.observation)
+        return self.observation, reward, terminated, False, info
     
     def read_request(self):
         next_request = self.slice_requests.iloc[self.current_time_step - 1]
@@ -167,6 +168,9 @@ class SliceCreationEnv1(gym.Env):
         elif resources <= self.slices_param[2]:
             slice_id = 3
         return slice_id
+
+    def reset_resources(self):
+        self.resources = [500]
     
     def render(self):
         if self.render_mode == "rgb_array":
@@ -177,5 +181,5 @@ class SliceCreationEnv1(gym.Env):
             pygame.display.quit()
             pygame.quit()
             
-a = SliceCreationEnv1()
-check_env(a)
+#a = SliceCreationEnv1()
+#check_env(a)

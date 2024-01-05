@@ -4,22 +4,17 @@ from stable_baselines3 import DQN
 
 from gym_examples.envs.slice_creation_env1 import SliceCreationEnv1
 
+from os.path import exists
+
 env = SliceCreationEnv1()
 
+'''
+if exists('/home/mario/Documents/DQN_Models/Model 1/gym-examples/dqn_slices1.zip'):
+    model = DQN.load("dqn_slices1")
+else: model = DQN("MlpPolicy", env, verbose=1, exploration_final_eps=0, exploration_fraction=0.5)
+'''
+#model = DQN.load("dqn_slices1")
 model = DQN("MlpPolicy", env, verbose=1, exploration_final_eps=0, exploration_fraction=0.5)
-model.learn(total_timesteps=100, log_interval=1000)
+
+model.learn(total_timesteps=10000, log_interval=1000)
 model.save("dqn_slices1")
-
-
-'''
-del model # remove to demonstrate saving and loading
-
-model = DQN.load("dqn_slices1")
-
-obs, info = env.reset()
-while True:
-    action, _states = model.predict(obs, deterministic=True)
-    obs, reward, terminated, truncated, info = env.step(action)
-    if terminated or truncated:
-        obs, info = env.reset()
-'''

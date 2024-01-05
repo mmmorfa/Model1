@@ -18,7 +18,7 @@ class SliceCreationEnv(gym.Env):
         
         self.slices_param = [10, 20, 50]
 
-        self.slice_requests = pd.read_csv('D:/Work/UPC/ORAN/DQN models/Model 1/gym-examples/gym_examples/slice_request_db')  # Load VNF requests from the generated CSV
+        self.slice_requests = pd.read_csv('/home/mario/Documents/DQN_Models/Model 1/gym-examples/gym_examples/slice_request_db1')  # Load VNF requests from the generated CSV
         
         self.observation_space = gym.spaces.Box(low=0, high=1000, shape=(5,), dtype=np.float32)
         
@@ -168,5 +168,5 @@ class SliceCreationEnv(gym.Env):
             pygame.display.quit()
             pygame.quit()
             
-a = SliceCreationEnv()
-check_env(a)
+#a = SliceCreationEnv()
+#check_env(a)
