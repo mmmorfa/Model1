@@ -13,16 +13,16 @@ pd.set_option("display.max_rows", None, "display.max_columns", None)
 
 # ****************************** GLOBALS ******************************
 # File directory
-DIRECTORY = 'slice_request_db1'
+DIRECTORY = 'gym-examples/gym_examples/slice_request_db1'
 # Number of VNF types dictionary
 # i.e. {key: value}, value = [BW] (modified to 5 types of [BW] only)
 VNF_TYPES = {0: [8], 1: [20], 2: [14], 3: [5], 4: [30], 5: [2]}
 # Arrival rates from VNF types dictionary
 ARRIVAL_RATE = {0: 3, 1: 2, 2: 1, 3: 4, 4: 2, 5: 3}
 # VNF life cycle from VNF types dictionary
-LIFE_CYCLE_RATE = {0: 10, 1: 20, 2: 80, 3: 50, 4: 60, 5: 50}
+LIFE_CYCLE_RATE = {0: 10, 1: 8, 2: 5, 3: 3, 4: 9, 5: 10}
 # Num of vnf requests
-NUM_VNF_REQUESTS = 10000
+NUM_VNF_REQUESTS = 100000
 
 
 # SEED
