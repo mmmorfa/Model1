@@ -20,6 +20,7 @@ class SliceCreationEnv1(gym.Env):
         self.slices_param = [10, 20, 50]
 
         self.slice_requests = pd.read_csv('/home/mario/Documents/DQN_Models/Model 1/gym-examples/gym_examples/slice_request_db1')  # Load VNF requests from the generated CSV
+        #self.slice_requests = pd.read_csv('/data/scripts/DQN_models/Model1/gym_examples/slice_request_db1')    #For pod
         
         self.observation_space = gym.spaces.Box(low=0, high=10000, shape=(2,), dtype=np.float32) #ovservation space composed by Requested resources (MEC BW) and available MEC resources.
         

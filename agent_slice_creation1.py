@@ -8,7 +8,7 @@ from os.path import exists
 
 env = SliceCreationEnv1()
 
-
+#if exists('/data/scripts/DQN_Models/Model 1/dqn_slices1.zip'):
 if exists('/home/mario/Documents/DQN_Models/Model 1/gym-examples/dqn_slices1.zip'):
     model = DQN.load("gym-examples/dqn_slices1", env)
 else: 
