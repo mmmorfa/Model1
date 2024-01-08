@@ -14,7 +14,7 @@ class SliceCreationEnv1(gym.Env):
         # Define environment parameters
         
         #Available resources (Order: MEC BW, )
-        self.resources = [500]
+        self.resources = [100]
         
         #Defined parameters per Slice. (Each component is a list of the correspondent slice parameters)
         self.slices_param = [10, 20, 50]

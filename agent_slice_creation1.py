@@ -15,8 +15,9 @@ else:
     #model = DQN("MlpPolicy", env, verbose=1, exploration_final_eps=0, exploration_fraction=0.5)
     model = DQN("MlpPolicy", env,
             buffer_size=int(1e5),  # Replay buffer size
-            learning_rate=1e-4,     # Learning rate
-            exploration_fraction=0.3,  # Fraction of total timesteps for exploration
+            learning_rate=1e-3,     # Learning rate
+            learning_starts=80000,  # Number of steps before learning starts
+            exploration_fraction=0.5,  # Fraction of total timesteps for exploration
             exploration_final_eps=0,  # Final exploration probability after exploration_fraction * total_timesteps
             train_freq=4,           # Update the model every `train_freq` steps
             gradient_steps=1,       # Number of gradient steps to take after each batch of data
@@ -29,5 +30,5 @@ else:
 #model = DQN.load("dqn_slices1", env)
 #model = DQN("MlpPolicy", env, verbose=1, exploration_final_eps=0, exploration_fraction=0.5)
 
-model.learn(total_timesteps=100000, log_interval=5000)
+model.learn(total_timesteps=150000, log_interval=1000)
 model.save("gym-examples/dqn_slices1")
