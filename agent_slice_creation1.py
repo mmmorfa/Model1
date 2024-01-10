@@ -2,13 +2,19 @@ import gymnasium as gym
 
 from stable_baselines3 import DQN
 
+from stable_baselines3.common.logger import configure
+
 from gym_examples.envs.slice_creation_env1 import SliceCreationEnv1
 
 from os.path import exists
 
 env = SliceCreationEnv1()
 
-#if exists('/data/scripts/DQN_Models/Model 1/dqn_slices1.zip'):
+log_path = "/home/mario/Documents/DQN_Models/Model 1/gym-examples/logs/"
+#log_path = "/data/scripts/DQN_models/Model 1/logs/"     #For pod
+new_logger = configure(log_path, ["stdout", "csv", "tensorboard"])
+
+#if exists('/data/scripts/DQN_Models/Model 1/gym-examples/dqn_slices1.zip'):
 if exists('/home/mario/Documents/DQN_Models/Model 1/gym-examples/dqn_slices1.zip'):
     model = DQN.load("gym-examples/dqn_slices1", env)
 else: 
@@ -29,6 +35,6 @@ else:
 
 #model = DQN.load("dqn_slices1", env)
 #model = DQN("MlpPolicy", env, verbose=1, exploration_final_eps=0, exploration_fraction=0.5)
-
-model.learn(total_timesteps=150000, log_interval=1000)
+model.set_logger(new_logger)
+model.learn(total_timesteps=100000, log_interval=1000)
 model.save("gym-examples/dqn_slices1")
