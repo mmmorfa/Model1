@@ -21,11 +21,11 @@ def read_csv(file_path):
     
     return columns
 
-file_path1 = '/home/mario/Documents/DQN_Models/Model 1/gym-examples/logs/progress(1e-4).csv'
+file_path1 = '/home/mario/Documents/DQN_Models/Model 1/gym-examples/logs/progress(1e-4, starts80k, fraction0_5).csv'
 #file_path = '/data/scripts/DQN_models/Model 1/logs/progress.csv'
 
 file_path2 = '/home/mario/Documents/DQN_Models/Model 1/gym-examples/logs/progress(1e-3).csv'
-#file_path3 = '/home/mario/Documents/DQN_Models/Model 1/gym-examples/logs/progress(1e-5).csv'
+file_path3 = '/home/mario/Documents/DQN_Models/Model 1/gym-examples/logs/progress(1e-5).csv'
 
 data1 = read_csv(file_path1)
 ep_rew_mean1 = [float(i) for i in data1['rollout/ep_rew_mean']]
@@ -52,7 +52,6 @@ learning_rate2 = [float(i) for i in data2['train/learning_rate'] if i!= '']
 loss2 = [float(i) for i in data2['train/loss'] if i!= '']
 n_updates2 = [float(i) for i in data2['train/n_updates'] if i!= '']
 
-'''
 data3 = read_csv(file_path3)
 ep_rew_mean3 = [float(i) for i in data3['rollout/ep_rew_mean']]
 ep_len_mean3 = [float(i) for i in data3['rollout/ep_len_mean']]
@@ -64,14 +63,29 @@ total_timesteps3 = [float(i) for i in data3['time/total_timesteps']]
 learning_rate3 = [float(i) for i in data3['train/learning_rate'] if i!= '']
 loss3 = [float(i) for i in data3['train/loss'] if i!= '']
 n_updates3 = [float(i) for i in data3['train/n_updates'] if i!= '']
-'''
 
+plt.figure(1)
 plt.plot(total_timesteps1, ep_rew_mean1, marker='o', linestyle='-', color='b', label='Learning rate = 1e-4')
 plt.plot(total_timesteps2, ep_rew_mean2, marker='o', linestyle='-', color='r', label='Learning rate = 1e-3')
-#plt.plot(total_timesteps3, ep_rew_mean3, marker='o', linestyle='-', color='g', label='Learning rate = 1e-5')
+plt.plot(total_timesteps3, ep_rew_mean3, marker='o', linestyle='-', color='g', label='Learning rate = 1e-5')
 plt.xlabel("Timesteps")
 plt.ylabel("Episode Mean Reward")
 plt.title("Training plots")
 plt.legend()
 plt.show()
 
+a = data1['train/loss'].index(str(loss1[0]))
+b = data2['train/loss'].index(str(loss2[0]))
+c = data3['train/loss'].index(str(loss3[0]))
+#print (a, b, c)
+
+
+plt.figure(2)
+plt.plot(episodes1[a:], loss1, marker='o', linestyle='-', color='b', label='Learning rate = 1e-4')
+plt.plot(episodes2[b:], loss2, marker='o', linestyle='-', color='r', label='Learning rate = 1e-3')
+plt.plot(episodes3[c:], loss3, marker='o', linestyle='-', color='g', label='Learning rate = 1e-5')
+plt.xlabel("Episodes")
+plt.ylabel("Loss")
+plt.title("Training plots")
+plt.legend()
+plt.show()

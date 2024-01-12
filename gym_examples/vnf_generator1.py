@@ -22,7 +22,7 @@ ARRIVAL_RATE = {0: 3, 1: 2, 2: 3, 3: 4, 4: 2, 5: 3}
 # VNF life cycle from VNF types dictionary
 LIFE_CYCLE_RATE = {0: 10, 1: 8, 2: 5, 3: 3, 4: 9, 5: 10}
 # Num of vnf requests
-NUM_VNF_REQUESTS = 10000
+NUM_VNF_REQUESTS = 100000
 
 
 # SEED
