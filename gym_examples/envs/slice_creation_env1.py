@@ -38,7 +38,7 @@ class SliceCreationEnv1(gym.Env):
     def reset(self, seed=None, options=None):
         # Initialize the environment to its initial state
 
-        #print(self.processed_requests)
+        print(self.processed_requests)
 
         # We need the following line to seed self.np_random
         super().reset(seed=seed)
@@ -126,7 +126,7 @@ class SliceCreationEnv1(gym.Env):
         
         #self.current_time_step += 1  # Increment the time step
         
-        #print("Action: ", action, "\nObservation: ", self.observation)
+        #print("Action: ", action, "\nObservation: ", self.observation, "\nReward: ", self.reward)
         
         return self.observation, reward, terminated, False, info
     

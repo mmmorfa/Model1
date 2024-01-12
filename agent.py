@@ -2,21 +2,19 @@ import gymnasium as gym
 
 from stable_baselines3 import DQN
 
-from gym_examples.envs.slice_creation_env import SliceCreationEnv
+from gym_examples.envs.slice_creation_env1 import SliceCreationEnv1
 
-env = SliceCreationEnv()
+env = SliceCreationEnv1()
 
-model = DQN("MultiInputPolicy", env, verbose=1)
-model.learn(total_timesteps=5000, log_interval=4)
-model.save("dqn_slices")
-
-del model # remove to demonstrate saving and loading
-
-model = DQN.load("dqn_slices")
+model = DQN.load("gym-examples/dqn_slices1", env)
 
 obs, info = env.reset()
-while True:
+
+cont = 0
+while cont<100:
     action, _states = model.predict(obs, deterministic=True)
     obs, reward, terminated, truncated, info = env.step(action)
+    print('Action: ', action,'Observation: ', obs, ' | Reward: ', reward, ' | Terminated: ', terminated)
+    cont += 1
     if terminated or truncated:
         obs, info = env.reset()

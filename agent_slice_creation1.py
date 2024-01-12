@@ -35,11 +35,11 @@ else:
             gamma=0.99,             # Discount factor
             tau=1.0,                # Target network update rate
             target_update_interval=1000,  # Interval (in timesteps) at which the target network is updated
-            verbose=1,
-            policy_kwargs=policy_kwargs)              # Verbosity level
+            verbose=1,              # Verbosity level
+            policy_kwargs=policy_kwargs)              
 
 #model = DQN.load("dqn_slices1", env)
 #model = DQN("MlpPolicy", env, verbose=1, exploration_final_eps=0, exploration_fraction=0.5)
 model.set_logger(new_logger)
-model.learn(total_timesteps=100000, log_interval=1000)
+model.learn(total_timesteps=100, log_interval=1000)
 model.save("gym-examples/dqn_slices1")
