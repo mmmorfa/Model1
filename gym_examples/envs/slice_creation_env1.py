@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 from stable_baselines3.common.env_checker import check_env
 from copy import deepcopy
+#import os
 
 
 class SliceCreationEnv1(gym.Env):
@@ -38,7 +39,9 @@ class SliceCreationEnv1(gym.Env):
     def reset(self, seed=None, options=None):
         # Initialize the environment to its initial state
 
-        print(self.processed_requests)
+        #print(self.processed_requests)
+
+        #os.system("gym-examples/gym_examples/vnf_generator.py")
 
         # We need the following line to seed self.np_random
         super().reset(seed=seed)
