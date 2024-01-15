@@ -41,5 +41,5 @@ else:
 #model = DQN.load("dqn_slices1", env)
 #model = DQN("MlpPolicy", env, verbose=1, exploration_final_eps=0, exploration_fraction=0.5)
 model.set_logger(new_logger)
-model.learn(total_timesteps=200000, log_interval=5000)
+model.learn(total_timesteps=100000, log_interval=1000)
 model.save("gym-examples/dqn_slices1")
