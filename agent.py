@@ -6,7 +6,9 @@ from gym_examples.envs.slice_creation_env1 import SliceCreationEnv1
 
 env = SliceCreationEnv1()
 
+
 model = DQN.load("gym-examples/dqn_slices1", env)
+#model = DQN.load("gym-examples/dqn_slices1(Arch:8; learn:1e-3; starts:50k; fraction:0_5 )", env)
 
 obs, info = env.reset()
 
