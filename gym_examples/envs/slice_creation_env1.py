@@ -91,7 +91,7 @@ def generate_vnf_list():
         for req in requests:
             vnfList.append(req)
 
-        # Sort the requests according to the arrival rate
+    # Sort the requests according to the arrival rate
     vnfList.sort(key=lambda x: x[0])
 
         # Until now, we have generated num_VNFs_requests * len(vnf_types) requests.
@@ -113,7 +113,7 @@ class SliceCreationEnv1(gym.Env):
         # Define environment parameters
         
         #Available resources (Order: MEC BW, )
-        self.resources = [100]
+        self.resources = [60]
         
         #Defined parameters per Slice. (Each component is a list of the correspondent slice parameters)
         self.slices_param = [10, 20, 50]
@@ -140,7 +140,7 @@ class SliceCreationEnv1(gym.Env):
 
         #print(self.processed_requests)
 
-        self.generate_vnf_list()
+        generate_vnf_list()
 
         # We need the following line to seed self.np_random
         super().reset(seed=seed)
@@ -168,9 +168,9 @@ class SliceCreationEnv1(gym.Env):
         if self.first:
             self.next_request = self.processed_requests[0]
             self.first = False
-        else: 
+        #else: 
             #next_request = self.read_request()
-            self.update_slice_requests(self.next_request)
+        #    self.update_slice_requests(self.next_request)
             
         terminated = False
         
@@ -179,7 +179,9 @@ class SliceCreationEnv1(gym.Env):
         reward_value = 1
         
         # Apply the selected action (0: Do Nothing, 1: Allocate Slice 1, 2: Allocate Slice 2, 3: Allocate Slice 3)
-        self.evaluate_action(action, slice_id, reward_value, terminated) 
+        terminated = self.evaluate_action(action, slice_id, reward_value, terminated) 
+
+        self.update_slice_requests(self.next_request)
     
         self.observation = np.array([self.next_request[1]] + self.resources, dtype=np.float32)
         
@@ -190,8 +192,10 @@ class SliceCreationEnv1(gym.Env):
         #self.current_time_step += 1  # Increment the time step
         
         #print("Action: ", action, "\nObservation: ", self.observation, "\nReward: ", self.reward)
+
+        truncated = False
         
-        return self.observation, self.reward, terminated, False, info
+        return self.observation, self.reward, terminated, truncated, info
     
     def read_request(self):
         next_request = self.slice_requests.iloc[self.current_time_step - 1]
@@ -204,7 +208,7 @@ class SliceCreationEnv1(gym.Env):
         if len(self.processed_requests) != 0:
             for i in self.processed_requests:
                 #i[2] < request[0]
-                if i[2] < request[0]:
+                if i[2] <= request[0]:
                     self.deallocate_slice(i)
                     self.processed_requests.remove(i)
         self.processed_requests.append(request)
@@ -239,7 +243,7 @@ class SliceCreationEnv1(gym.Env):
         return slice_id
 
     def reset_resources(self):
-        self.resources = [100]
+        self.resources = [60]
     
     def evaluate_action(self, action, slice_id, reward_value, terminated):
         if action == 1 and slice_id == 1:
