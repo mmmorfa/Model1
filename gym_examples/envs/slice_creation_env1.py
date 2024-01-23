@@ -131,6 +131,7 @@ class SliceCreationEnv1(gym.Env):
         self.current_time_step = 1
         self.reward = 0
         self.first = True
+        self.resources_flag = 1
         
         self.processed_requests = []
 
@@ -153,12 +154,13 @@ class SliceCreationEnv1(gym.Env):
         #self.slice_requests = pd.read_csv('/data/scripts/DQN_models/Model1/gym_examples/slice_request_db1')    #For pod
         self.next_request = self.read_request()
         self.update_slice_requests(self.next_request)
-        self.observation = np.array([self.next_request[1]] + deepcopy(self.resources), dtype=np.float32)
-        #self.observation = np.array(self.observation, np.float32)
+        self.check_resources(self.next_request[1])
+        self.observation = np.array([self.next_request[1]] + [self.resources_flag], dtype=np.float32)
+        #self.observation = np.array([self.next_request[1]] + deepcopy(self.resources), dtype=np.float32)
         self.info = {}
         self.first = True
         
-        #print("\nReset: ", self.observation)
+        print("\nReset: ", self.observation)
         
         return self.observation, self.info
 
@@ -182,8 +184,10 @@ class SliceCreationEnv1(gym.Env):
         terminated = self.evaluate_action(action, slice_id, reward_value, terminated) 
 
         self.update_slice_requests(self.next_request)
+
+        self.check_resources(self.next_request[1])
     
-        self.observation = np.array([self.next_request[1]] + self.resources, dtype=np.float32)
+        self.observation = np.array([self.next_request[1]] + [self.resources_flag], dtype=np.float32)
         
         #done = False
         
@@ -208,7 +212,7 @@ class SliceCreationEnv1(gym.Env):
         if len(self.processed_requests) != 0:
             for i in self.processed_requests:
                 #i[2] < request[0]
-                if i[2] <= request[0]:
+                if len(i)== 4 and i[2] <= request[0]:
                     self.deallocate_slice(i)
                     self.processed_requests.remove(i)
         self.processed_requests.append(request)
@@ -217,8 +221,8 @@ class SliceCreationEnv1(gym.Env):
         # Logic to check if there are available resources to allocate the VNF request
         # Return True if resources are available, False otherwise
         if self.resources[0] >= int(slice_bw_request):
-            return True
-        else: return False
+            self.resources_flag = 1
+        else: self.resources_flag = 0
     
     def allocate_slice(self, slice_bw_request):
         # Allocate the resources requested by the current VNF
@@ -247,7 +251,8 @@ class SliceCreationEnv1(gym.Env):
     
     def evaluate_action(self, action, slice_id, reward_value, terminated):
         if action == 1 and slice_id == 1:
-            if self.check_resources(self.next_request[1]):
+            self.check_resources(self.next_request[1])
+            if self.resources_flag == 1:
                 self.allocate_slice(self.next_request[1])
                 self.processed_requests[len(self.processed_requests) - 1].append(slice_id)
                 self.reward += reward_value   
@@ -261,10 +266,11 @@ class SliceCreationEnv1(gym.Env):
             self.reward = 0
             
         if action == 2 and slice_id == 2:
-            if self.check_resources(self.next_request[1]):
+            self.check_resources(self.next_request[1])
+            if self.resources_flag == 1:
                 self.allocate_slice(self.next_request[1])
                 self.processed_requests[len(self.processed_requests) - 1].append(slice_id)
-                self.reward += reward_value 
+                self.reward += reward_value   
                 self.next_request = self.read_request()
             else: 
                 terminated = True
@@ -275,10 +281,11 @@ class SliceCreationEnv1(gym.Env):
             self.reward = 0
             
         if action == 3 and slice_id == 3:
-            if self.check_resources(self.next_request[1]):
+            self.check_resources(self.next_request[1])
+            if self.resources_flag == 1:
                 self.allocate_slice(self.next_request[1])
                 self.processed_requests[len(self.processed_requests) - 1].append(slice_id)
-                self.reward += reward_value     
+                self.reward += reward_value   
                 self.next_request = self.read_request()
             else: 
                 terminated = True
@@ -289,7 +296,8 @@ class SliceCreationEnv1(gym.Env):
             self.reward = 0
             
         if action == 0:
-            if not self.check_resources(self.next_request[1]):
+            self.check_resources(self.next_request[1])
+            if self.resources_flag == 0:
                 self.reward += reward_value
                 self.next_request = self.read_request()
             else: 
