@@ -24,7 +24,7 @@ ARRIVAL_RATE = {0: 3, 1: 2, 2: 3, 3: 4, 4: 2, 5: 3}
 # VNF life cycle from VNF types dictionary
 LIFE_CYCLE_RATE = {0: 10, 1: 8, 2: 5, 3: 3, 4: 9, 5: 10}
 # Num of vnf requests
-NUM_VNF_REQUESTS = 100
+NUM_VNF_REQUESTS = 1000
 
 # ****************************** VNF Generator FUNCTIONS ******************************
 
@@ -113,7 +113,7 @@ class SliceCreationEnv1(gym.Env):
         # Define environment parameters
         
         #Available resources (Order: MEC BW, )
-        self.resources = [60]
+        self.resources = [1000]
         
         #Defined parameters per Slice. (Each component is a list of the correspondent slice parameters)
         self.slices_param = [10, 20, 50]
@@ -247,7 +247,7 @@ class SliceCreationEnv1(gym.Env):
         return slice_id
 
     def reset_resources(self):
-        self.resources = [60]
+        self.resources = [1000]
     
     def evaluate_action(self, action, slice_id, reward_value, terminated):
         if action == 1 and slice_id == 1:
